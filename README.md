@@ -1,14 +1,28 @@
 # Stackby API - Unofficial Documentation
 
+> **NOTICE (March 2026):** We no longer use Stackby. After experiencing a complete API outage lasting over a week (all endpoints returning HTTP 500), combined with unresponsive support, unreliable billing, and missing invoices, we decided to move on. This repository remains public as a reference for anyone still working with the Stackby API.
+
 > Community-driven documentation for Stackby's Developer API, filling the gaps in official documentation.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Why This Exists
 
-[Stackby](https://stackby.com) is a powerful spreadsheet-database hybrid, but its API documentation is incomplete or outdated. This repository provides working examples and documentation discovered through extensive testing.
+[Stackby](https://stackby.com) is a spreadsheet-database hybrid whose API documentation is incomplete, outdated, and in some cases incorrect. We created this repository after spending significant time debugging issues that were caused by undocumented behavior — not by our code.
 
-**Key Discovery:** The API uses `field` (singular), NOT `fields` (plural) - a critical detail missing from all official sources.
+**Key Discovery:** The API uses `field` (singular), NOT `fields` (plural) — a critical detail missing from all official sources.
+
+## Why We Stopped Using Stackby
+
+After months of building integrations on top of Stackby, we encountered issues that made it untenable as a production platform:
+
+1. **Complete API outage (Feb 23 – Mar 2026):** All API endpoints started returning HTTP 500. The web UI continued working, but the API — the foundation of our automations — was completely down with zero communication from Stackby.
+2. **Unresponsive support:** Formal complaints with documented evidence and deadlines were met with partial, deflective responses. No acknowledgment of the outage scope.
+3. **Billing discrepancies:** A $399 add-on payment was not reflected in their billing system ("No records found" in the Add-ons panel).
+4. **Missing invoices:** Despite providing full EU billing details (company name, VAT number, address) on the day of purchase, no invoice was issued for over two months — a violation of EU Directive 2006/112/EC.
+5. **Features not delivered as advertised:** Automation runs were capped at 100/month instead of the 500/month included with our tier.
+
+We documented everything and sought refunds through the appropriate channels. AppSumo reviewed our evidence and processed a refund for their portion of the purchase.
 
 ## Quick Start
 
@@ -80,30 +94,6 @@ POST /rowcreate/{stackId}/{tableId}
 
 > **IMPORTANT:** Use `field` (singular), not `fields`. This is the most common mistake.
 
-**Example:**
-```bash
-curl -X POST 'https://stackby.com/api/betav1/rowcreate/stXXXXXX/tbYYYYYY' \
-  -H 'Content-Type: application/json' \
-  -H 'api-key: YOUR_API_KEY' \
-  -d '{"records": [{"field": {"Name": "Jane Doe", "Email": "jane@example.com"}}]}'
-```
-
-**Response:**
-```json
-[
-  {
-    "id": "rw987654321",
-    "field": {
-      "rowId": "rw987654321",
-      "Name": "Jane Doe",
-      "Email": "jane@example.com",
-      "createdAt": "2024-01-15T10:35:00.000Z",
-      "updatedAt": "2024-01-15T10:35:00.000Z"
-    }
-  }
-]
-```
-
 **Limits:** Maximum 10 rows per request.
 
 ### Update Rows
@@ -126,14 +116,6 @@ PATCH /rowupdate/{stackId}/{tableId}
 }
 ```
 
-**Example:**
-```bash
-curl -X PATCH 'https://stackby.com/api/betav1/rowupdate/stXXXXXX/tbYYYYYY' \
-  -H 'Content-Type: application/json' \
-  -H 'api-key: YOUR_API_KEY' \
-  -d '{"records": [{"id": "rw987654321", "field": {"Name": "Jane Smith"}}]}'
-```
-
 ### Delete Rows
 
 ```bash
@@ -142,24 +124,9 @@ DELETE /rowdelete/{stackId}/{tableId}?rowIds[]={rowId}
 
 > **Note:** Row IDs are passed as query parameters, NOT in the request body.
 
-**Example:**
-```bash
-curl -X DELETE 'https://stackby.com/api/betav1/rowdelete/stXXXXXX/tbYYYYYY?rowIds[]=rw987654321' \
-  -H 'api-key: YOUR_API_KEY'
-```
-
 **Multiple rows:**
 ```bash
 ?rowIds[]=rw111&rowIds[]=rw222&rowIds[]=rw333
-```
-
-**Response:**
-```json
-{
-  "records": [
-    {"id": "rw987654321", "deleted": true}
-  ]
-}
 ```
 
 ## Payload Format Summary
@@ -197,17 +164,9 @@ curl -X DELETE 'https://stackby.com/api/betav1/rowdelete/stXXXXXX/tbYYYYYY?rowId
 {"records": [{"field": {"Name": "Test"}}]}
 ```
 
-### HTTP 400: "Only 10 rows are allowed"
-
-**Cause:** Either sending more than 10 rows, OR the payload format is unrecognized.
-
-### HTTP 400: "please check table or column name"
-
-**Cause:** Column name doesn't match exactly (including case and spaces).
-
 ## Known Issues
 
-See [KNOWN_ISSUES.md](KNOWN_ISSUES.md) for documented bugs in the Stackby API.
+See [KNOWN_ISSUES.md](KNOWN_ISSUES.md) for documented bugs in the Stackby API, including the February 2026 complete API outage.
 
 ## Code Examples
 
@@ -218,11 +177,7 @@ See [KNOWN_ISSUES.md](KNOWN_ISSUES.md) for documented bugs in the Stackby API.
 
 ## Contributing
 
-Found something new? Please open an issue or PR! This documentation helps the entire Stackby developer community.
-
-## Acknowledgments
-
-Thanks to the Stackby team for building a great product. This documentation is meant to complement official resources and help developers integrate more easily.
+Found something new? Please open an issue or PR.
 
 ## License
 
@@ -230,5 +185,5 @@ MIT License - See [LICENSE](LICENSE)
 
 ---
 
-*Last updated: February 2026*
-*Tested with Stackby API betav1*
+*Last updated: March 2026*
+*Status: No longer maintained — we stopped using Stackby*
